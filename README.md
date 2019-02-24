@@ -1,10 +1,17 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Typescript
+
+```
+yarn add typescript @types/node @types/react @types/react-dom @types/jest
+```
 ## Install Firebase
 
 ```
 npm install -g firebase-tools
+firebase logout
 firebase login
+firebase init
 ```
 
 ## Available Scripts

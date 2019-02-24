@@ -3,7 +3,7 @@ import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 
 import { Container, Header } from 'semantic-ui-react';
 
-export default function LoginForm({ firebase }) {
+export default function LoginForm({ firebase }: any) {
   return (
     <Container>
       <Header content="Log Issue" subheader="Please sign-in:" />
