@@ -1,20 +1,22 @@
 import React, { useState, useContext, useEffect } from 'react'
 import FirebaseContext from 'context/Firebase'
+import { format, distanceInWordsToNow } from 'date-fns'
 
 import { Form, Button } from 'semantic-ui-react'
 
 function LogForm () {
   const [ text, setText ] = useState('')
-  const { firebase } = useContext(FirebaseContext)
+  const { logsRef } = useContext(FirebaseContext)
 
   const onChangeTextArea = (evt) =>
     setText(evt.currentTarget.value)
 
   const onClick = async (evt) => {
     try {
-      const result = await firebase.database.ref('logs').push({
+      const result = await logsRef.push({
         createdAt: Date.now(),
-        text
+        text,
+        tags: '' // Cannot include array.
       })
       console.log(result)
     } catch (error) {
@@ -34,13 +36,19 @@ function LogForm () {
 }
 
 function LogList () {
+  // TODO: Create a context for fetching/manipulating the data in log list.
   const [logs, setLogs] = useState([])
-  const { firebase } = useContext(FirebaseContext)
+  const { logsRef } = useContext(FirebaseContext)
 
   const fetchLogs = async () => {
-    const snapshot = await firebase.database.ref('/logs').once('value')
+    // Firebase does not allow sorting by descending. Take the last 10 and
+    // reverse the sorting manually.
+    const snapshot = await logsRef
+      .orderByChild('createdAt')
+      .limitToLast(10)
+      .once('value')
     const logs = snapshot.val()
-    setLogs(Object.entries(logs))
+    if (logs) setLogs(Object.entries(logs).reverse())
   }
 
   useEffect(() => {
@@ -52,7 +60,7 @@ function LogList () {
       {
         logs.map(([id, obj]) => (
           <div>
-            <div>{obj.createdAt}</div>
+            <div>{format(obj.createdAt, 'YYYY-MM-DD, HH:mm A')} ({distanceInWordsToNow(obj.createdAt)})</div>
             <div>{obj.text}</div>
           </div>
         ))
@@ -62,11 +70,11 @@ function LogList () {
 }
 
 function Home () {
-  const { authUser } = useContext(FirebaseContext)
+  const { firebase } = useContext(FirebaseContext)
+  const onSignOut = () => firebase.auth.signOut()
   return (
     <>
-
-      {authUser && <div>is login</div>}
+      <Button onClick={onSignOut}>Sign Out</Button>
     Home
       <LogForm />
       <LogList />

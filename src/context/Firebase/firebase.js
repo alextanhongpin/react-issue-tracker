@@ -11,32 +11,36 @@ const config = Object.freeze({
   messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID
 })
 
-const withExpense = superclass => class extends superclass {
-  get expensesRef () {
-    // return this.database.ref('expenses')
-  }
-
-  // async range (start, end) {
-  //   const s = startOfDay(start).getTime()
-  //   const e = endOfDay(end).getTime()
-  //   const snapshot = await this.expensesRef
-  //     .orderByChild('createdAt')
-  //     .startAt(s)
-  //     .endAt(e)
-  //     .once('value')
-  //   return snapshot.val()
-  // }
-}
+// async range (start, end) {
+//   const s = startOfDay(start).getTime()
+//   const e = endOfDay(end).getTime()
+//   const snapshot = await this.expensesRef
+//     .orderByChild('createdAt')
+//     .startAt(s)
+//     .endAt(e)
+//     .once('value')
+//   return snapshot.val()
+// }
 
 class Firebase {
   constructor () {
     app.initializeApp(config)
+    this.app = app
     this.database = app.database()
     this.auth = app.auth()
   }
 
-  signInAnonymously () {
-    return this.auth.signInAnonymously()
+  uiConfig () {
+    const uiconfig = {
+      signInFlow: 'popup',
+      signInOptions: [
+        app.auth.GoogleAuthProvider.PROVIDER_ID
+      ],
+      callbacks: {
+        signInSuccessWithAuthResult: () => false
+      }
+    }
+    return uiconfig
   }
 }
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Firebase from 'context/Firebase/firebase'
+import LoginForm from 'context/Firebase/ui.tsx'
 
 const firebase = new Firebase()
 
@@ -13,26 +14,19 @@ const withFirebaseContext = Component => props => (
 
 function FirebaseProvider ({ children }) {
   const [authUser, setAuthUser] = useState(null)
-  const [authError, setAuthError] = useState(null)
-
-  async function login () {
-    try {
-      await firebase.signInAnonymously()
-      setAuthError(null)
-    } catch (error) {
-      console.log('error', error)
-      setAuthError(error)
-    }
-  }
 
   useEffect(() => {
-    login()
     return firebase.auth.onAuthStateChanged(authUser =>
       setAuthUser(authUser || null)
     )
   }, [])
 
-  const value = { firebase, authUser, authError }
+  if (!authUser) {
+    return <LoginForm firebase={firebase} />
+  }
+
+  const logsRef = firebase.database.ref(`/logs/${authUser.uid}`)
+  const value = { firebase, authUser, logsRef }
   return (
     <FirebaseContext.Provider value={value}>
       {children}
