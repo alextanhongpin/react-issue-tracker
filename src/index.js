@@ -6,6 +6,7 @@ import * as serviceWorker from './serviceWorker'
 import { FirebaseProvider } from 'context/Firebase'
 
 import 'semantic-ui-css/semantic.min.css'
+import 'github-markdown-css'
 
 ReactDOM.render(
   <FirebaseProvider>

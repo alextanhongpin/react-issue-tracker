@@ -1,6 +1,9 @@
 import React, { useState, useContext, useEffect } from 'react'
 import FirebaseContext from 'context/Firebase'
 import { format, distanceInWordsToNow } from 'date-fns'
+import { markdown } from 'markdown'
+
+import './index.module.css'
 
 import { Form, Button } from 'semantic-ui-react'
 
@@ -29,6 +32,7 @@ function LogForm () {
       <Form.Field>
         <label>Description</label>
         <textarea value={text} placeholder='Enter what you have done here' onChange={onChangeTextArea} />
+        <div className='markdown-body' dangerouslySetInnerHTML={{ __html: markdown.toHTML(text) }} />
       </Form.Field>
       <Button onClick={onClick}>Submit</Button>
     </Form>
@@ -61,7 +65,7 @@ function LogList () {
         logs.map(([id, obj]) => (
           <div>
             <div>{format(obj.createdAt, 'YYYY-MM-DD, HH:mm A')} ({distanceInWordsToNow(obj.createdAt)})</div>
-            <div>{obj.text}</div>
+            <div className='markdown-body' dangerouslySetInnerHTML={{ __html: markdown.toHTML(obj.text) }} />
           </div>
         ))
       }
