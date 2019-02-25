@@ -2,10 +2,11 @@ import React, { useState, useContext, useEffect } from 'react'
 import FirebaseContext from 'context/Firebase'
 import { format, distanceInWordsToNow } from 'date-fns'
 import { markdown } from 'markdown'
+import DOMPurify from 'dompurify'
 
 import './index.module.css'
 
-import { Form, Button } from 'semantic-ui-react'
+import { Form, Button, TextArea } from 'semantic-ui-react'
 
 function LogForm () {
   const [ text, setText ] = useState('')
@@ -31,8 +32,8 @@ function LogForm () {
     <Form>
       <Form.Field>
         <label>Description</label>
-        <textarea value={text} placeholder='Enter what you have done here' onChange={onChangeTextArea} />
-        <div className='markdown-body' dangerouslySetInnerHTML={{ __html: markdown.toHTML(text) }} />
+        <TextArea value={text} placeholder='Enter what you have done here' onChange={onChangeTextArea} autoHeight />
+        <div className='markdown-body' dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(markdown.toHTML(text)) }} />
       </Form.Field>
       <Button onClick={onClick}>Submit</Button>
     </Form>
@@ -58,14 +59,15 @@ function LogList () {
   useEffect(() => {
     fetchLogs()
   }, [])
-
   return (
     <div style={{ whiteSpace: 'pre-wrap' }}>
       {
         logs.map(([id, obj]) => (
           <div>
             <div>{format(obj.createdAt, 'YYYY-MM-DD, HH:mm A')} ({distanceInWordsToNow(obj.createdAt)})</div>
-            <div className='markdown-body' dangerouslySetInnerHTML={{ __html: markdown.toHTML(obj.text) }} />
+            <div className='markdown-body' dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(markdown.toHTML(obj.text))
+            }} />
           </div>
         ))
       }
