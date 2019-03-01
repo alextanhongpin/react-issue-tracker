@@ -1,0 +1,66 @@
+.header {
+    display: grid;
+    height: 64px;
+    line-height: 64px;
+    grid-template-columns: max-content max-content;
+    justify-content: space-between;
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 0 1.5rem;
+    align-items: center;
+}
+
+.headerBrandWrapper {
+    height: 40px;
+    line-height: 40px;
+    border: 2px solid black;
+    display: grid;
+    grid-template-columns: repeat(2, min-content);
+    align-content: center;
+}
+
+.headerBrand {
+    background: black;
+    color: white;
+    padding: 0 0.5rem;
+}
+
+.headerButton {
+    text-decoration: none;
+    text-transform: uppercase;
+    color: inherit;
+    font-size: 1rem;
+    opacity: 0.6;
+    color: black;
+    cursor: pointer;
+}
+
+.headerButton:hover {
+    opacity: 1;
+    color: #FF4444;
+}
+
+
+.headerAside {
+    display: grid;
+    grid-template-columns: repeat(2, max-content);
+    grid-column-gap: 1.5rem;
+}
+
+.userInfoWrapper {
+    display: grid;
+    grid-template-columns: repeat(2, max-content);
+    grid-column-gap: 0.5rem;
+    align-items: center;
+}
+
+.userPhoto {
+    height: 32px;
+    width: auto;
+    border-radius: 50%;
+}
+
+.userName {
+    font-weight: bold;
+    font-size: 1rem;
+}

@@ -7,6 +7,7 @@ import { FirebaseProvider } from 'context/Firebase'
 
 import 'semantic-ui-css/semantic.min.css'
 import 'github-markdown-css'
+import './index.css'
 
 ReactDOM.render(
   <FirebaseProvider>
