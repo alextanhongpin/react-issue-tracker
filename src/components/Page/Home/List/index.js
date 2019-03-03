@@ -16,6 +16,34 @@ import {
 } from 'semantic-ui-react'
 
 import EditForm from 'components/Page/Home/EditForm'
+
+const ListItem = ({ id, updatedAt, createdAt, title, text, onEdit, onCancel, editable, onRemove, onSubmit }) => {
+  const [visible, setVisible] = useState(false)
+  const isEdited = updatedAt > createdAt && '(edited)'
+  const dateFormatted = format(createdAt, 'DD/MM/YYYY')
+  const editIcon = <Icon className={style.editIcon} name='edit' onClick={() => onEdit(id)} />
+  const deleteIcon = <Icon name='trash' onClick={() => onRemove(id)} />
+
+  return (
+    <div className={style.list} onClick={() => setVisible(isVisible => !isVisible)}>
+      <div className={[style.listDate, 'mono'].join(' ')}>{dateFormatted}</div>
+      <div>{title} {isEdited} {editIcon}</div>
+      <div>{distanceInWordsToNow(createdAt)} ago</div>
+      <div className={style.text} style={{ display: visible ? 'block' : 'none' }}>
+        {
+          id === editable && <EditForm text={text} title={title} onSubmit={(evt, text, title) => onSubmit({ id, text, title })} onCancel={() => onCancel(id)} />
+        }
+        {visible && <div
+          dangerouslySetInnerHTML={{
+            __html: DOMPurify.sanitize(text)
+          }}
+        />}
+
+      </div>
+    </div>
+  )
+}
+
 const List = () => {
   const [editable, setEditable] = useState(false)
   const { state } = useContext(PageContext)
@@ -43,32 +71,19 @@ const List = () => {
       <div style={{ whiteSpace: 'pre-wrap' }}>
 
         {
-          logs.map(([id, obj]) => {
-            const isEdited = obj.updatedAt > obj.createdAt && '(edited)'
-            const dateFormatted = format(obj.createdAt, 'DD/MM/YYYY')
-            const editIcon = <Icon className={style.editIcon} name='edit' onClick={() => setEditable(editable => editable === id ? null : id)} />
-            const deleteIcon = <Icon name='trash' onClick={() => onRemove(id)} />
-
-            return (
-              <div key={id} className={style.list}>
-                <div className={style.listDate}>{dateFormatted}</div>
-                <div>{obj.title} {isEdited} {editIcon}</div>
-                <div>{distanceInWordsToNow(obj.createdAt)}</div>
-                <div className={style.text}>
-                  {
-                    id === editable
-                      ? <EditForm text={obj.text} title={obj.title} onSubmit={(evt, text, title) => updateText({ id, text, title })} onCancel={() => setEditable(null)} />
-                      : <div
-                        className='markdown-body'
-                        dangerouslySetInnerHTML={{
-                          __html: DOMPurify.sanitize(obj.text)
-                        }}
-                      />
-
-                  }</div>
-              </div>
-            )
-          })
+          logs.map(([id, obj]) => (
+            <ListItem
+              key={id}
+              id={id}
+              {...obj}
+              editable={editable}
+              onEdit={id => setEditable(editable => editable === id ? null : id)}
+              onCancel={id => setEditable(null)}
+              onSubmit={(evt, text, title) => updateText({ id, text, title })}
+              onRemove={id => onRemove(id)}
+            />
+          )
+          )
 
         }
       </div>
