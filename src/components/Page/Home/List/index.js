@@ -10,19 +10,17 @@ import PageContext from 'components/Page/Home/context'
 import style from './index.module.css'
 import {
   Container,
-  Divider,
-  Item,
   Icon
 } from 'semantic-ui-react'
 
-import EditForm from 'components/Page/Home/EditForm'
+import EditForm from 'components/Page/Home/EditForm/index.js'
 
 const ListItem = ({ id, updatedAt, createdAt, title, text, onEdit, onCancel, editable, onRemove, onSubmit }) => {
   const [visible, setVisible] = useState(false)
   const isEdited = updatedAt > createdAt && '(edited)'
   const dateFormatted = format(createdAt, 'DD/MM/YYYY')
   const editIcon = <Icon className={style.editIcon} name='edit' onClick={() => onEdit(id)} />
-  const deleteIcon = <Icon name='trash' onClick={() => onRemove(id)} />
+  // const deleteIcon = <Icon name='trash' onClick={() => onRemove(id)} />
 
   return (
     <div className={style.list} onClick={() => setVisible(isVisible => !isVisible)}>
