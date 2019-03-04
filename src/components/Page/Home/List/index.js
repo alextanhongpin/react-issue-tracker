@@ -19,12 +19,12 @@ const ListItem = ({ id, updatedAt, createdAt, title, text, onEdit, onCancel, edi
   const isEdited = updatedAt > createdAt && '(edited)'
   const dateFormatted = format(createdAt, 'DD/MM/YYYY')
   const editIcon = <Icon className={style.editIcon} name='edit' onClick={() => onEdit(id)} />
-  // const deleteIcon = <Icon name='trash' onClick={() => onRemove(id)} />
+  const deleteIcon = <Icon name='trash' onClick={() => onRemove(id)} />
 
   return (
     <div className={style.list} onClick={() => setVisible(isVisible => !isVisible)}>
       <div className={[style.listDate, 'mono'].join(' ')}>{dateFormatted}</div>
-      <div>{title} {isEdited} {editIcon}</div>
+      <div>{title} {isEdited} {editIcon} {deleteIcon}</div>
       <div>{distanceInWordsToNow(createdAt)} ago</div>
       <div className={style.text} style={{ display: visible ? 'block' : 'none' }}>
         {

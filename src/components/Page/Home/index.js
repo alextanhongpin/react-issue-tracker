@@ -12,7 +12,7 @@ import {
 import { useDispatch } from 'store'
 
 import 'github-markdown-css'
-import './index.module.css'
+import style from './index.module.css'
 
 const Home = () => {
   const { logsRef } = useContext(FirebaseContext)
@@ -23,6 +23,7 @@ const Home = () => {
       .orderByChild('createdAt')
       .limitToLast(20)
       .once('value')
+
     // Firebase does not allow sorting by descending.
     // Take the last 20 and perform manual sorting.
     const data = Object.entries(snapshot.val()).reverse()
@@ -71,10 +72,10 @@ const Home = () => {
   }, [])
 
   return (
-    <>
-      <CreateForm />
+    <div className={style.dividePage}>
       <List />
-    </>
+      <CreateForm />
+    </div>
   )
 }
 
