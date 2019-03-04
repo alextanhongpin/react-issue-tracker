@@ -4,15 +4,21 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import FirebaseContext from 'context/Firebase'
 
 import Home from 'components/Page/Home'
+import createStore, { StateProvider } from 'store'
 
 import style from './App.module.css'
 
 const App = () => {
   const { firebase, authUser } = useContext(FirebaseContext)
   const onSignOut = () => firebase.auth.signOut()
+
+  const { state, reducer } = createStore()
   return (
     <Router>
-      <>
+      <StateProvider
+        initialState={state}
+        reducer={reducer}
+      >
         <header className={style.header}>
           <div className={style.headerBrandWrapper}><div className={style.headerBrand}>Issue</div><div>Tracker</div></div>
 
@@ -28,7 +34,7 @@ const App = () => {
         <Switch>
           <Route exact path='/' component={Home} />
         </Switch>
-      </>
+      </StateProvider>
     </Router>
   )
 }

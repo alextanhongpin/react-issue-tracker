@@ -1,11 +1,10 @@
 import React, { useState, useContext } from 'react'
 
 import { format, distanceInWordsToNow } from 'date-fns'
-// import { markdown } from 'markdown'
 import DOMPurify from 'dompurify'
 
 import FirebaseContext from 'context/Firebase'
-import PageContext from 'components/Page/Home/context'
+import { useGlobalState } from 'store'
 
 import style from './index.module.css'
 import {
@@ -13,7 +12,7 @@ import {
   Icon
 } from 'semantic-ui-react'
 
-import EditForm from 'components/Page/Home/EditForm/index.js'
+import EditForm from 'components/Page/Home/EditForm'
 
 const ListItem = ({ id, updatedAt, createdAt, title, text, onEdit, onCancel, editable, onRemove, onSubmit }) => {
   const [visible, setVisible] = useState(false)
@@ -44,10 +43,11 @@ const ListItem = ({ id, updatedAt, createdAt, title, text, onEdit, onCancel, edi
 
 const List = () => {
   const [editable, setEditable] = useState(false)
-  const { state } = useContext(PageContext)
+  const state = useGlobalState()
 
-  const logs = Array.from(state.logs)
+  const logs = Array.from(state.log.logs)
   const { logsRef } = useContext(FirebaseContext)
+
   const updateText = async ({ id, text, title }) => {
     try {
       await logsRef.child(id).update({
